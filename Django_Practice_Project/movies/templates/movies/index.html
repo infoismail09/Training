@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Genre</th>
+            <th>Stock</th>
+            <th>Daily Rate</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for movie in movies %}
+        <tr>
+            <tr>
+                <td>
+                    <!-- <a href="/movies/{{ movie.id }}">{{ movie.title }}</a>  This used to show details of movies after clicking on title -->
+                    <!-- Another way we can use refrencing url -->
+                    <a href="{% url 'movies_details' movie.id %}">{{ movie.title }}</a>
+                 </td>
+                <td>{{ movie.genre}}</td>
+                <td>{{ movie.number_in_stock}}</td>
+                <td>{{ movie.daily_rate}}</td>
+            </tr>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+    
+{% endblock %}
+
+
+    
