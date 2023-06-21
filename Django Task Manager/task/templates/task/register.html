@@ -1,0 +1,13 @@
+{% include 'base.html' %} 
+
+{% block content %}
+
+<h4>Registration page</h4>
+
+<form method="POST" autocomplete="off">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+  </form>
+    
+{% endblock %}
