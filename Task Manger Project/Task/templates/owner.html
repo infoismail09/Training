@@ -1,0 +1,14 @@
+{% extends "base.html"%}
+{% block maincode %}
+
+<h1>Welcome to task manager</h1>
+  <table>
+  {% for x in owner %}
+  <tr>
+  <td><a href='/tasks/{{x.id}}'>{{x.owner_id}}</a></td>
+  </tr>
+  {% endfor %}
+  </table>
+
+
+{% endblock %}

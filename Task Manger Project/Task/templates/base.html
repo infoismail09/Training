@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Sriracha&display=swap');
+
+        body {
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        /* CSS for header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f5f5f5;
+        }
+
+        .header .logo {
+            font-size: 25px;
+            font-family: 'Sriracha', cursive;
+            color: #000;
+            text-decoration: none;
+            margin-left: 30px;
+        }
+
+        .nav-items {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #f5f5f5;
+            margin-right: 20px;
+        }
+
+        .nav-items a {
+            text-decoration: none;
+            font-size: 20px;
+            color: blue;
+            padding: 25px 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <a href="#" class="logo">Task manager Application</a>
+        <nav class="nav-items">
+            <a class="ho" href="{% url 'home' %}">Home</a>
+            <span class="hello-msg">Hello, {{request.user}}</span>
+            <a href="{% url 'logout' %}">logout</a>
+        </nav>
+    </header>
+    <div class="container">
+        {% block maincode %}
+        {% endblock %}
+    </div>
+
+</body>
+
+</html>
