@@ -6,7 +6,7 @@ from .froms import CreateUserFrom
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
-# from django.views.decorators.cache import cache_page
+from django.core.paginator import Paginator
 
 
 
@@ -18,16 +18,26 @@ def task_list(request):
     id=request.user.id
     # id=request.user.id with in below  object type owner =id then it show list of logged in user and secound way already user below (owner=request.user)
     get_task=Task.objects.filter(owner =id)
-    context  = {'task':get_task}
+    page=Paginator(get_task,4)
+    page_list = request.GET.get('page')
+    page=page.get_page(page_list)
+    context={'page':page}      
     return render (request,'task_list.html',context)
 
-
+@login_required(login_url='login')
 def task_detail(request,id):
     if request.method=='GET':
-        get_task=Task.objects.get(id=id)
-        get_subtask=Sub_Task.objects.filter(task_id=id)
-        subtask={'subtask':get_subtask,'task':get_task}
-        return render(request,'task_detail.html',subtask)
+        user=request.user
+        try:
+            get_task=Task.objects.get(id=id,owner=user)
+        except Task.DoesNotExist:
+            get_task=None
+        if get_task:
+            get_subtask=Sub_Task.objects.filter(task_id=id)
+            subtask={'subtask':get_subtask,'task':get_task}
+            return render(request,'task_detail.html',subtask)
+        else:
+            return HttpResponse('Permission Denied')
     if request.method=="POST":
         get_task=Task.objects.get(id=id)
         subtask_name=request.POST.get('subtask_name')
@@ -35,7 +45,7 @@ def task_detail(request,id):
         subtask.save()
         return redirect('task_list')
     
-    
+@login_required(login_url='login')   
 def create_task(request):
     if request.method=="POST":
         task_name=request.POST.get('task_name')
