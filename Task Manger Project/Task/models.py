@@ -41,6 +41,13 @@ class Sub_Task(models.Model):
     #     return f"{self.task} {self.subtask_name} {self.created_at}"
 
 
+# created simple middleware which will log the following data model named RequestLog
+
+class RequestLog(models.Model):
+    user = models.ForeignKey(User,blank=True,on_delete=models.CASCADE,null=True)
+    date_time = models.DateTimeField(auto_now=True)
+
+
 
 
 
