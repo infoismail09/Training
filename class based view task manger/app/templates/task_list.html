@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task manger Class Based</title>
+</head>
+<body>
+    <h1>Welcome to task manager</h1>
+
+    <h1>Task List</h1>
+ 
+    <table class="table table-borderless">
+        <thead>
+          <tr>
+            <th scope="col">id</th>
+            <th scope="col">Task</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for x in task %}
+          <tr>
+            <td>{{x.id}}</td>
+            <td>{{x.task_name}}</td>
+            {% if x.status == 1 %}
+            <td>Complete</td>
+            {% else %}
+            <td>InComplete</td>
+            {% endif %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+</body>
+</html>
+
