@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <table >
+        <br>
+        <h2>Create Task here</h2>
+        <form action="create" method='POST'>
+            {% csrf_token %}
+                <p>Task Name</p>
+                <input type="text" name="task_name"><br><br>
+                <select name="status">
+                <option value="complete">Complete</option>
+                <option value="incomplete">InComplete</option>
+                </select><br><br>
+                <input type="submit">
+        </form>
+            
+            
+    </table>
+
+    
+{% endblock %}

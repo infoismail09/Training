@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<form action="{% url 'Update_task' %}" method="POST">
+  {% csrf_token %}
+  <input type="hidden" name="id" value={{task.id}}>
+  <input type="text" value={{ task.task_name }} name="task_name">
+  <select name="status">
+      <option value="complete">Complete</option>
+      <option value="incomplete">InComplete</option>
+  </select>
+  <input type="submit" value="update">
+  </form>
+  <h2>Subtask List</h2>
+    <table>
+      {% for i in subtask%}
+    <tr>
+    <td>{{i.subtask_name}}</td>
+    </tr>
+    {% endfor %}
+    </table>
+  </form>
+  <form action='/task/{{task.id}}' method='POST'>
+  {% csrf_token %}
+  <br>
+  Add Subtask <input type='text' name="subtask_name">
+  <br><br>
+  <button>Sumbit</button>
+  </form>
+  
+    
+    
+{% endblock %}
