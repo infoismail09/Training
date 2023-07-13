@@ -7,7 +7,8 @@ class Student(models.Model):
     city = models.CharField(max_length=70)
     marks = models.IntegerField()
     pass_date = models.DateField()
-
+    admdatetime = models.DateTimeField(null=True, blank=True)
+    
 
 class Teacher(models.Model):
     name = models.CharField(max_length=70)
