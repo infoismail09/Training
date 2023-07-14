@@ -1,0 +1,38 @@
+<title>Products</title>
+<!DOCTYPE html>
+<html>
+<style>
+table, th, td {
+  border:1px solid black;
+}
+</style>
+<body>
+
+<h2>Product List</h2>
+
+<table style="width:100%">
+<tr>
+ <th scope="col">ID</th>
+ <th scope="col">Customer</th>
+ <th scope="col">Product_name</th>
+ <th scope="col">Product_type</th>
+ <th scope="col">Product_price</th>
+
+<tr>
+  {% for x in product %}
+  <tr>
+  <td>{{x.id}}</td>
+  <td>{{x.customer}}</td>
+  <td>{{x.product_name}}</td>
+  <td>{{x.product_type}}</td>
+  <td>{{x.product_price}}</td>
+
+  </tr>
+  {% endfor %}
+
+</table>
+
+</body>
+</html>
+
+

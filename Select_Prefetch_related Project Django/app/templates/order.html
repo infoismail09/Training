@@ -1,0 +1,36 @@
+<title>Orders</title>
+<!DOCTYPE html>
+<html>
+<style>
+table, th, td {
+  border:1px solid black;
+}
+</style>
+<body>
+
+<h2>Order List</h2>
+
+<table style="width:100%">
+  <tr>
+ <th scope="col">ID</th>
+ <th scope="col">Ordered Date & Time</th>
+ <th scope="col">Complete</th>
+ <th scope="col">Transaction_id</th>
+  </tr>
+  <tr>
+      {% for x in order %}
+  <tr>
+  <td>{{x.id}}
+  <td>{{x.ordered_date}}</td>
+  <td>{{x.complete}}</td>
+  <td>{{x.transaction_id}}</td>
+
+
+  </tr>
+  {% endfor %}
+  </tr>
+
+</table>
+
+</body>
+</html>
