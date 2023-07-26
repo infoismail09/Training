@@ -225,10 +225,12 @@ def home(request):
 
     # student_data = Student.objects.filter(roll__isnull=True)
 
-    student_data = Student.objects.filter(roll__isnull=False)
+    # student_data = Student.objects.filter(roll__isnull=False)
+
+    student_data = Student.objects.filter(name__iendswith='an')
 
     print("Return:",student_data)
-    print()
+    print(student_data.count())
     print("SQL Query:",student_data.query)
     # return render (request,"school/index.html",{'students':student_data}) # this is used for retuning query set
     # return render (request,"school/index.html",{'student':student_data}) # thsi is used for not retuning query set
