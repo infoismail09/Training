@@ -5,10 +5,15 @@ from django.http import JsonResponse
 from django.http import HttpResponse
 from django.http import Http404
 from rest_framework.views import APIView
+from rest_framework import viewsets
+from rest_framework.generics import ListAPIView,RetrieveAPIView,CreateAPIView,UpdateAPIView,DestroyAPIView
+from rest_framework.generics import ListCreateAPIView,RetrieveUpdateAPIView,RetrieveDestroyAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
-from api.models import Quotes,Categories
-from api.serializers import QuotesSerializer,CategoriesSerializer
+from api.models import Quotes,Categories,Products
+from api.serializers import QuotesSerializer,CategoriesSerializer,ProductSerializer
 from drf_spectacular.utils import extend_schema
+from rest_framework.pagination import PageNumberPagination
+from .mypaginations import MyPageNumberPagination
 # from rest_framework.generics import CreateAPIView
 # Create your views here.
 
@@ -18,9 +23,8 @@ def quotes_list(request):
 
     '''
     List of quotes list ,or create new Quote
-
-
     '''
+    
     if request.method == 'GET':
         quotes_data = Quotes.objects.all()
         serializer = QuotesSerializer(quotes_data, many=True)
@@ -96,6 +100,7 @@ class Categories_List(APIView):
         category_data = Categories.objects.all()
         serializer = CategoriesSerializer(category_data, many=True)
         return Response(serializer.data)
+        
     
     @extend_schema(request=CategoriesSerializer,responses=CategoriesSerializer)
     def post(self,request, format= None):
@@ -141,5 +146,64 @@ class Categories_details(APIView):
         msg = {"message":"Data Deleted Sucessfully"}
         return Response(msg,status=status.HTTP_204_NO_CONTENT)        
     
-           
-    
+
+################## Now implementing Generics API View ####################
+
+# for listing All product list  Using Generics Concrete Api View
+class ProductList(ListAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer
+    pagination_class = MyPageNumberPagination       
+
+# Creat APi View
+class ProductCreate(CreateAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer 
+
+# Retrieve API View # use to fetch individual or single data using id 
+class ProductRetrieve(RetrieveAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer   
+
+# Update API view
+class ProductUpdate(UpdateAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer  
+
+# Delete API View
+class ProductDelete(DestroyAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer
+
+# now implementing generics concrete API view combination 
+#listing and creating data 
+class ProductListCreate(ListCreateAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer
+
+# Retrive and update Api view combo
+class ProductRetriveUpdate(RetrieveUpdateAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer
+
+# Retrieve and Destroy Api view
+class ProductRetriveDestroy(RetrieveDestroyAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer
+
+# Retrive update and destroy
+class ProductRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer
+
+
+######### Viewset in class based view for nested serializer concept ##############
+
+# class CategoriesViewSet(viewsets.ModelViewSet):
+#     queryset = Categories.objects.all()
+#     serializer_class = CategoriesSerializer
+
+
+# class ProductsViewSet(viewsets.ModelViewSet):
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer

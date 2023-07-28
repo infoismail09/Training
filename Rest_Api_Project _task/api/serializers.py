@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Quotes,Categories
+from .models import Quotes,Categories,Products
 
 class QuotesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,3 +13,15 @@ class CategoriesSerializer(serializers.ModelSerializer):
         model = Categories
         fields = '__all__'
         read_only_fields =  ['created_at' , 'updated_at'] 
+        depth = 1
+
+class ProductSerializer(serializers.ModelSerializer):
+    product = CategoriesSerializer(many=True,read_only=True) #this line is ued to work for nested serializer 
+    class Meta:
+        model = Products
+        fields = '__all__'
+        read_only_fields =  ['created_at' , 'updated_at','product'] # included what to show in the nested serializer in the fields 
+        depth = 1
+
+
+
