@@ -12,13 +12,15 @@ from rest_framework.response import Response
 from api.models import Quotes,Categories,Products
 from api.serializers import QuotesSerializer,CategoriesSerializer,ProductSerializer
 from drf_spectacular.utils import extend_schema
-from rest_framework.pagination import PageNumberPagination
 from .mypaginations import MyPageNumberPagination
+# from .mypaginations import MyCursorPagination
+from .mypaginations import MyLimitOffsetPagination
 # from rest_framework.generics import CreateAPIView
 # Create your views here.
 
 @extend_schema(request=QuotesSerializer,responses=QuotesSerializer)
 @api_view(['GET','POST'])
+
 def quotes_list(request):
 
     '''
@@ -26,9 +28,19 @@ def quotes_list(request):
     '''
     
     if request.method == 'GET':
+        # quotes_data = Quotes.objects.all()
+        # serializer = QuotesSerializer(quotes_data, many=True)
+        # return Response(serializer.data)
+
         quotes_data = Quotes.objects.all()
-        serializer = QuotesSerializer(quotes_data, many=True)
-        return Response(serializer.data)
+        qoutes_filter = request.query_params.get("filter")
+        if qoutes_filter != None:
+            quotes_data = Quotes.objects.filter(text=qoutes_filter)
+        paginator = MyPageNumberPagination()
+        result_page = paginator.paginate_queryset(quotes_data, request)
+
+        serializer = QuotesSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
 
     if request.method == 'POST':
@@ -97,10 +109,20 @@ class Categories_List(APIView):
     '''
     @extend_schema(responses=CategoriesSerializer)
     def get(self,request):
+        # categiories_data = Categories.objects.all()
+        # serializer = CategoriesSerializer(categiories_data, many=True)
+        # return Response(serializer.data)
+
         category_data = Categories.objects.all()
-        serializer = CategoriesSerializer(category_data, many=True)
-        return Response(serializer.data)
-        
+        category_filter = request.query_params.get("filter")
+        if category_filter != None:
+            category_data = Categories.objects.filter(title=category_filter)
+        paginator = MyPageNumberPagination()
+        result_page = paginator.paginate_queryset(category_data, request)
+
+        serializer = CategoriesSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
     
     @extend_schema(request=CategoriesSerializer,responses=CategoriesSerializer)
     def post(self,request, format= None):
@@ -147,13 +169,23 @@ class Categories_details(APIView):
         return Response(msg,status=status.HTTP_204_NO_CONTENT)        
     
 
+############### Implementing Filter and search functionality
+
+class Category_list(ListAPIView):
+    queryset = Categories.objects.all()
+    serializer_class = CategoriesSerializer
+
+
+
 ################## Now implementing Generics API View ####################
 
 # for listing All product list  Using Generics Concrete Api View
 class ProductList(ListAPIView):   
     queryset = Products.objects.all()
     serializer_class = ProductSerializer
-    pagination_class = MyPageNumberPagination       
+    # pagination_class = MyPageNumberPagination    # numberpagination   
+    # pagination_class = MyCursorPagination           # Cursor Pagination
+    pagination_class = MyLimitOffsetPagination
 
 # Creat APi View
 class ProductCreate(CreateAPIView):   
