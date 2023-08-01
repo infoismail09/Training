@@ -15,8 +15,16 @@ from drf_spectacular.utils import extend_schema
 from .mypaginations import MyPageNumberPagination
 # from .mypaginations import MyCursorPagination
 from .mypaginations import MyLimitOffsetPagination
+# from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
+from rest_framework.filters import OrderingFilter
 # from rest_framework.generics import CreateAPIView
-# Create your views here.
+# Below import is for basic authentication implementation 
+from rest_framework.authentication import BasicAuthentication
+from rest_framework.permissions import IsAuthenticated,AllowAny,IsAdminUser
+# below i mport is for Session Autentication
+from rest_framework.authentication import SessionAuthentication
+
 
 @extend_schema(request=QuotesSerializer,responses=QuotesSerializer)
 @api_view(['GET','POST'])
@@ -167,25 +175,77 @@ class Categories_details(APIView):
         categories_delete.delete()
         msg = {"message":"Data Deleted Sucessfully"}
         return Response(msg,status=status.HTTP_204_NO_CONTENT)        
-    
+
+
 
 ############### Implementing Filter and search functionality
+
+
+# normal filter using filter orm
+# class Category_list(ListAPIView):
+#     queryset = Categories.objects.all()
+#     serializer_class = CategoriesSerializer
+#     def get_queryset(self):
+#         user = self.request.user
+#         return Categories.objects.filter()
+
+#  generics filter backend 
+# using filter backed doing * per view filter and for globally implemented in setting .py
+
+# class Category_list(ListAPIView):
+#     queryset = Categories.objects.all()
+#     serializer_class = CategoriesSerializer
+#     filter_backends = [DjangoFilterBackend]
+#     filterset_fields  = ['title']
+#     # filterset_fields  = ['title','created at'] # example for multiple feilds
+
+############### Implementing serch filter functionality 
+
+# class Category_list(ListAPIView):
+#     queryset = Categories.objects.all()
+#     serializer_class = CategoriesSerializer
+#     # filter_backends = [SearchFilter]
+#     # search_fields = ['title']
+#     # filterset_fields  = ['title','created at'] # example for multiple feilds
+#     search_fields = ['^title'] 
+    # search_fields = ['=title']  # Exact Serch
+    # search_fields = ['@title']  # full search
+    # search_fields = ['$title']  # regex serch
+
+
+############ Implementing Ordering Filter ########################
+
+# class ProductList(ListAPIView):   
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer
+#     filter_backends = [OrderingFilter]
+#     ordering_fields  = ['created_at']
+
+
+############### Implementing check list last task of search and filter that is for search for both product and category
 
 class Category_list(ListAPIView):
     queryset = Categories.objects.all()
     serializer_class = CategoriesSerializer
+    filter_backends = [SearchFilter]
+    search_fields = ['title']
 
-
+class ProductList(ListAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer 
+    filter_backends = [SearchFilter]
+    search_fields = ['title']   
 
 ################## Now implementing Generics API View ####################
 
 # for listing All product list  Using Generics Concrete Api View
-class ProductList(ListAPIView):   
-    queryset = Products.objects.all()
-    serializer_class = ProductSerializer
-    # pagination_class = MyPageNumberPagination    # numberpagination   
-    # pagination_class = MyCursorPagination           # Cursor Pagination
-    pagination_class = MyLimitOffsetPagination
+
+# class ProductList(ListAPIView):   
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer
+#     # pagination_class = MyPageNumberPagination    # numberpagination   
+#     # pagination_class = MyCursorPagination           # Cursor Pagination
+#     pagination_class = MyLimitOffsetPagination
 
 # Creat APi View
 class ProductCreate(CreateAPIView):   
@@ -239,3 +299,32 @@ class ProductRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
 # class ProductsViewSet(viewsets.ModelViewSet):
 #     queryset = Products.objects.all()
 #     serializer_class = ProductSerializer
+
+
+########## basic Authentication and permission class ###############
+# this is for individual class view if global go to settings and configure
+
+# class CategoriesViewSet(viewsets.ModelViewSet):
+#     queryset = Categories.objects.all()
+#     serializer_class = CategoriesSerializer
+#     authentication_classes = [BasicAuthentication]
+#     # permission_classes = [IsAuthenticated]
+#     permission_classes = [IsAdminUser]  # is will access by only admin user only who stats is ids staff true.
+
+# class ProductsViewSet(viewsets.ModelViewSet):
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer
+#     authentication_classes = [BasicAuthentication]
+#     permission_classes = [AllowAny]    # if we dont want to authenticate particular view simple implement AllowAny and import also 
+#                                       # we can over ride global by using AllowAny
+
+
+############### Implementing session Authentication ##############
+
+class CategoriesViewSet(viewsets.ModelViewSet):
+    queryset = Categories.objects.all()
+    serializer_class = CategoriesSerializer
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminUser]
+

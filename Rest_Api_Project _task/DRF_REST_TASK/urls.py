@@ -18,19 +18,21 @@ from django.contrib import admin
 from django.urls import path,include
 from api import views
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
-# from rest_framework.routers import DefaultRouter
+from rest_framework.routers import DefaultRouter
 
-# # Creating Router Object
-# router = DefaultRouter()
+# Creating Router Object
+router = DefaultRouter()
 
 # Register Product and categories with Router 
-# router.register('categories',views.CategoriesViewSet,basename='Categories')
+router.register('categories',views.CategoriesViewSet,basename='Categories')
 # router.register('Products',views.ProductsViewSet,basename='Products')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path ('',include('api.urls')),
-    # path('viewset/',include(router.urls)),
+    path('viewset/',include(router.urls)),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    # for session Authentication endpoint for browser login logout
+    path('auth/',include('rest_framework.urls',namespace='rest_framework')),
 ]

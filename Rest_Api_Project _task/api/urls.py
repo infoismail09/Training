@@ -6,7 +6,7 @@ urlpatterns = [
     path('quotes/<int:pk>',views.quotes_details,name='quotes_details'),
     path('categories/',views.Categories_List.as_view()),
     # creating Endpoint for filter and search
-    path('categorygetapi/',views.Category_list.as_view()),
+    # path('categorygetapi/',views.Category_list.as_view()),
     path('categories/<int:pk>',views.Categories_details.as_view()),
     path('products/',views.ProductList.as_view(),name='Product_list'),
     path('product_create/',views.ProductCreate.as_view(),name='product_create'),
@@ -18,6 +18,9 @@ urlpatterns = [
     path('product_retrive_update/<int:pk>/',views.ProductRetriveUpdate.as_view(),name='product_retrive_update'),
     path('Products/Delete/<int:pk>/',views.ProductRetriveDestroy.as_view(),name='Delete_Products'), # as per the below naming convention taken api end point
     path('Products/RetrieveUpdateDestroy/<int:pk>/',views.ProductRetrieveUpdateDestroy.as_view(),name='RetrieveUpdateDestroy'),
+    # now for task creating endpoint for categoy list and product list
+    path('categorygetapi/',views.Category_list.as_view()),
+    path('productgetapi/',views.Category_list.as_view()),
     #### Creating endpoint for nested serializers concept
 
 ]   
