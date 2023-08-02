@@ -3,7 +3,7 @@ from . import views
 
 urlpatterns = [
     path('quotes/',views.quotes_list, name = 'quotes'),
-    path('quotes/<int:pk>',views.quotes_details,name='quotes_details'),
+    # path('quotes/<int:pk>',views.quotes_details,name='quotes_details'),
     path('categories/',views.Categories_List.as_view()),
     # creating Endpoint for filter and search
     # path('categorygetapi/',views.Category_list.as_view()),
@@ -21,7 +21,6 @@ urlpatterns = [
     # now for task creating endpoint for categoy list and product list
     path('categorygetapi/',views.Category_list.as_view()),
     path('productgetapi/',views.Category_list.as_view()),
-    #### Creating endpoint for nested serializers concept
 
 ]   
 

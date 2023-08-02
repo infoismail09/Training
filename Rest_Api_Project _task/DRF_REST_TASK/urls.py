@@ -19,6 +19,7 @@ from django.urls import path,include
 from api import views
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 from rest_framework.routers import DefaultRouter
+from rest_framework.authtoken.views import obtain_auth_token
 
 # Creating Router Object
 router = DefaultRouter()
@@ -35,4 +36,6 @@ urlpatterns = [
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     # for session Authentication endpoint for browser login logout
     path('auth/',include('rest_framework.urls',namespace='rest_framework')),
+    # path('gettoken/',obtain_auth_token),
+    
 ]

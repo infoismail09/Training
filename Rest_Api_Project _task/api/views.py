@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view,authentication_classes,permission_classes
 from rest_framework import status
 from django.http import JsonResponse
 from django.http import HttpResponse
@@ -21,9 +21,13 @@ from rest_framework.filters import OrderingFilter
 # from rest_framework.generics import CreateAPIView
 # Below import is for basic authentication implementation 
 from rest_framework.authentication import BasicAuthentication
-from rest_framework.permissions import IsAuthenticated,AllowAny,IsAdminUser
+from rest_framework.permissions import IsAuthenticated,AllowAny,IsAdminUser,IsAuthenticatedOrReadOnly,DjangoModelPermissions,DjangoModelPermissionsOrAnonReadOnly
 # below i mport is for Session Autentication
 from rest_framework.authentication import SessionAuthentication
+# belo custom permission import
+from .custompermissions import MyPermission
+# below token Autentication imported
+from rest_framework.authentication import TokenAuthentication
 
 
 @extend_schema(request=QuotesSerializer,responses=QuotesSerializer)
@@ -64,48 +68,49 @@ def quotes_list(request):
         #     return JsonResponse(quotes_serializer.data, status=201)
         # return JsonResponse(quotes_serializer.errors, status=400)
 
-@extend_schema(request=QuotesSerializer,responses=QuotesSerializer)
-@api_view(['GET','PUT','PATCH','DELETE'])
-def quotes_details(request,pk):
-# GET Functionality
-    if request.method == 'GET':
-        quotes_data = Quotes.objects.get(id=pk)
-        quotes_serializer= QuotesSerializer(quotes_data)
-        return Response(quotes_serializer.data)
-    
-# PUT Functionality 
-    elif request.method == "PUT":
-        quotes_update = Quotes.objects.get(id=pk)
-        quotes_serializer = QuotesSerializer(
-            instance = quotes_update, data=request.data)
-        if quotes_serializer.is_valid():
-            quotes_serializer.save()
-            msg = {"message":"Data Updated Successfully"}
-            return Response(msg)
-        return Response(quotes_serializer)
-    
-# PATCH Functionality
+# @extend_schema(request=QuotesSerializer,responses=QuotesSerializer)
+# @api_view(['GET','PUT','PATCH','DELETE'])
 
-    elif request.method == 'PATCH':
-        quotes_update = Quotes.objects.get(id=pk)
-        quotes_serializer = QuotesSerializer(
-            instance = quotes_update, data=request.data)
-        if quotes_serializer.is_valid():
-            quotes_serializer.save()
-            msg = {"message":"Data Partially updated Sucessfully"}
-            return Response(msg)
-        return Response(quotes_serializer)
+# def quotes_details(request,pk):
+# # GET Functionality
+#     if request.method == 'GET':
+#         quotes_data = Quotes.objects.get(id=pk)
+#         quotes_serializer= QuotesSerializer(quotes_data)
+#         return Response(quotes_serializer.data)
     
- # DELETE Functionality
-    elif request.method == 'DELETE':
-        quotes_delete = Quotes.objects.filter(id=pk)
-        print(quotes_delete)
-        if not quotes_delete.exists():
-            msg = {"message":"Data Does not exist"}
-            return Response(msg) 
-        quotes_delete.first().delete()
-        msg = {"message":"Data Deleted"}
-        return Response(msg,status=status.HTTP_204_NO_CONTENT) 
+# # PUT Functionality 
+#     elif request.method == "PUT":
+#         quotes_update = Quotes.objects.get(id=pk)
+#         quotes_serializer = QuotesSerializer(
+#             instance = quotes_update, data=request.data)
+#         if quotes_serializer.is_valid():
+#             quotes_serializer.save()
+#             msg = {"message":"Data Updated Successfully"}
+#             return Response(msg)
+#         return Response(quotes_serializer)
+    
+# # PATCH Functionality
+
+#     elif request.method == 'PATCH':
+#         quotes_update = Quotes.objects.get(id=pk)
+#         quotes_serializer = QuotesSerializer(
+#             instance = quotes_update, data=request.data)
+#         if quotes_serializer.is_valid():
+#             quotes_serializer.save()
+#             msg = {"message":"Data Partially updated Sucessfully"}
+#             return Response(msg)
+#         return Response(quotes_serializer)
+    
+#  # DELETE Functionality
+#     elif request.method == 'DELETE':
+#         quotes_delete = Quotes.objects.filter(id=pk)
+#         print(quotes_delete)
+#         if not quotes_delete.exists():
+#             msg = {"message":"Data Does not exist"}
+#             return Response(msg) 
+#         quotes_delete.first().delete()
+#         msg = {"message":"Data Deleted"}
+#         return Response(msg,status=status.HTTP_204_NO_CONTENT) 
     
 
 ############# Now Creating Class Based view For Categories ##############
@@ -321,10 +326,90 @@ class ProductRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
 
 ############### Implementing session Authentication ##############
 
+# class CategoriesViewSet(viewsets.ModelViewSet):
+#     queryset = Categories.objects.all()
+#     serializer_class = CategoriesSerializer
+#     authentication_classes = [SessionAuthentication]
+    # permission_classes = [IsAuthenticated] # isme check karega wo login hai ya nahi nahi hai toh login karna padhega
+    # permission_classes = [IsAdminUser]   # isme jiska staff status tick rahega wo access kar payega
+    # permission_classes = [AllowAny]    # if we dont want to authenticate particular view simple implement AllowAny and import also 
+    # permission_classes = [IsAuthenticatedOrReadOnly]  # Agar register user hai to post update and delete kar payega and anony mous user hai toh sirif api get kar sakta hai
+    # permission_classes = [DjangoModelPermissions]  # isme authentication compulsory hai and poat man se test karenge toh csrf token chiye hog operation perforn karne ke liye
+    # permission_classes = [DjangoModelPermissionsOrAnonReadOnly]  # isme jo authnticate  hoga wo sirif read kar payega get but moddel permission bhi llagegi put ,post and delete ke liye
+    
+
+############## Implementing Custom Permissions ##################
+
+# class ProductsViewSet(viewsets.ModelViewSet):
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer
+#     authentication_classes = [SessionAuthentication]
+#     permission_classes = [MyPermission]
+
+
+############ Implementing Autentication and permisiion in Function based view ################
+
+# @extend_schema(request=QuotesSerializer,responses=QuotesSerializer)
+# @api_view(['GET','PUT','PATCH','DELETE'])
+# @authentication_classes([BasicAuthentication])
+# @permission_classes([IsAuthenticated])
+
+# def quotes_details(request,pk):
+# # GET Functionality
+#     if request.method == 'GET':
+#         quotes_data = Quotes.objects.get(id=pk)
+#         quotes_serializer= QuotesSerializer(quotes_data)
+#         return Response(quotes_serializer.data)
+    
+# # PUT Functionality 
+#     elif request.method == "PUT":
+#         quotes_update = Quotes.objects.get(id=pk)
+#         quotes_serializer = QuotesSerializer(
+#             instance = quotes_update, data=request.data)
+#         if quotes_serializer.is_valid():
+#             quotes_serializer.save()
+#             msg = {"message":"Data Updated Successfully"}
+#             return Response(msg)
+#         return Response(quotes_serializer)
+    
+# # PATCH Functionality
+
+#     elif request.method == 'PATCH':
+#         quotes_update = Quotes.objects.get(id=pk)
+#         quotes_serializer = QuotesSerializer(
+#             instance = quotes_update, data=request.data)
+#         if quotes_serializer.is_valid():
+#             quotes_serializer.save()
+#             msg = {"message":"Data Partially updated Sucessfully"}
+#             return Response(msg)
+#         return Response(quotes_serializer)
+    
+#  # DELETE Functionality
+#     elif request.method == 'DELETE':
+#         quotes_delete = Quotes.objects.filter(id=pk)
+#         print(quotes_delete)
+#         if not quotes_delete.exists():
+#             msg = {"message":"Data Does not exist"}
+#             return Response(msg) 
+#         quotes_delete.first().delete()
+#         msg = {"message":"Data Deleted"}
+#         return Response(msg,status=status.HTTP_204_NO_CONTENT) 
+           
+
+############# Implementing Token Autentication ###############
+
+# 1) we can generate token with cmd line in terminal by simpley typing 
+# python manage.py drf_create_token username (e.g vedant)
+# Generated token 83fd2e81063725d07da694348aa21b60625f3d1e for user vedant
+# note agar phele se hoga token toh mil jayega wahi token
+
+# 2) we can generate token by migrate and then from admin with the help of rest_framework.authtoken
+
+# 3) we can generate through httpie we have to congigure in main project url obtain_auth_token then create 1 end point then in terminal intall httpie
+# then type http POST http:http://127.0.0.1:8000/gettoken/username="vedant" password="django2023" 
+
 class CategoriesViewSet(viewsets.ModelViewSet):
     queryset = Categories.objects.all()
     serializer_class = CategoriesSerializer
-    authentication_classes = [SessionAuthentication]
+    authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
-    permission_classes = [IsAdminUser]
-
