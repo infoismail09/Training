@@ -48,14 +48,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # # 'blog.middlewares.my_middleware',
-    # # 'blog.middlewares.MyMiddleware',
+    # 'blog.middlewares.my_middleware',
+    # 'blog.middlewares.MyMiddleware',
     # 'blog.middlewares.BrotherMiddleware',
     # 'blog.middlewares.FatherMiddleware',
     # 'blog.middlewares.MotherMiddleware',
     # 'blog.middlewares.MyProcessMiddleware',
     # 'blog.middlewares.MyExceptionMiddleware',
-    'blog.middlewares.MyTemplateResponseMiddleware',
+    # 'blog.middlewares.MyTemplateResponseMiddleware',
 ]
 
 ROOT_URLCONF = 'middleware_project.urls'

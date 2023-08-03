@@ -1,5 +1,4 @@
-from typing import Any
-from  django.http import HttpResponse
+from django.http import HttpResponse
 
 ######### Function Based middleware implementation ############
 
@@ -13,21 +12,8 @@ from  django.http import HttpResponse
 #     return my_function
 
 
-############# class based middleware Implementation ################
 
-
-# class MyMiddleware:
-#     def __init__(self, get_response):
-#         self.get_response = get_response
-#         print("One time Initialization")
-
-#     def __call__(self,request):
-#         print("This will execute before view")
-#         response = self.get_response(request)
-#         print("this will execute after the views")
-#         return response
-
-#  implementing multiple middleware ############
+########## implementing multiple middleware ############
 
 
 # class BrotherMiddleware:
@@ -49,13 +35,12 @@ from  django.http import HttpResponse
 
 #     def __call__(self,request):
 #         print("This is Father before view")
-#         # response = self.get_response(request) # iske mtlb  bhai next middleware ko dekhega nahi toh view ke pass kayega 
-#         response = HttpResponse('Nikal lo')
+#         response = self.get_response(request) # iske mtlb  bhai next middleware ko dekhega nahi toh view ke pass jayega 
+#         # response = HttpResponse('Nikal lo')
 #         print("This is Father after the views")
 #         return response
     
 
-    
 # class MotherMiddleware:
 #     def __init__(self, get_response):
 #         self.get_response = get_response
@@ -63,26 +48,29 @@ from  django.http import HttpResponse
 
 #     def __call__(self,request):
 #         print("This is Mother before view")
-#         response = self.get_response(request)  # iske mtlb  bhai next middleware ko dekhega nahi toh view ke pass kayega 
+#         response = self.get_response(request)  # iske mtlb  bhai next middleware ko dekhega nahi toh view ke pass jayega 
 #         print("This is Mother after the views")
 #         return response
+
+
+
+
+ 
+ #### Middleware Hooks are special methods for classed based middlware only: ####
+
+
+class MyProcessMiddleware:
+    def __init__(self,get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        return response
     
-
-    ########## Middleware Hooks are special methods to classed based middlware only: ####
-
-
-# class MyProcessMiddleware:
-#     def __init__(self,get_response):
-#         self.get_response = get_response
-
-#     def __call__(self, request):
-#         response = self.get_response(request)
-#         return response
-    
-#     def process_view(request,*args, **kwargs):
-#         print("This is process view - Before view")
-#         # return HttpResponse("This is before View") 
-#         return None # iss case me abhi view chalega 
+    def process_view(request,*args, **kwargs):
+        print("This is process view - Before view")
+        # return HttpResponse("This is before View") 
+        return None # iss case me abhi view chalega 
 
 
 
@@ -109,18 +97,33 @@ from  django.http import HttpResponse
 
 ######### Template Hookh Middleware ###########
 
-class MyTemplateResponseMiddleware:
-    def __init__(self,get_response):
-        self.get_response = get_response
+# class MyTemplateResponseMiddleware:
+#     def __init__(self,get_response):
+#         self.get_response = get_response
 
-    def __call__(self, request):
-        response = self.get_response(request)
-        return response
+#     def __call__(self, request):
+#         response = self.get_response(request)
+#         return response
     
-    def process_template_response(self,request,response):
-        print("Process Template Response Middleware")
-        response.context_data['name'] = 'sabir'
-        return response
+#     def process_template_response(self,request,response):
+#         print("Process Template Response Middleware")
+#         response.context_data['name'] = 'sabir'
+#         return response
     
     
+
+############# class based middleware Implementation ################
+
+
+# class MyMiddleware:
+#     def __init__(self, get_response):
+#         self.get_response = get_response
+#         print("One time Initialization")
+
+#     def __call__(self,request):
+#         print("This will execute before view")
+#         response = self.get_response(request)
+#         print("this will execute after the views")
+#         return response
+
         

@@ -27,7 +27,9 @@ from rest_framework.authentication import SessionAuthentication
 # belo custom permission import
 from .custompermissions import MyPermission
 # below token Autentication imported
-from rest_framework.authentication import TokenAuthentication
+# from rest_framework.authentication import TokenAuthentication
+from api.customauth import CustomAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 @extend_schema(request=QuotesSerializer,responses=QuotesSerializer)
@@ -408,8 +410,73 @@ class ProductRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
 # 3) we can generate through httpie we have to congigure in main project url obtain_auth_token then create 1 end point then in terminal intall httpie
 # then type http POST http:http://127.0.0.1:8000/gettoken/username="vedant" password="django2023" 
 
-class CategoriesViewSet(viewsets.ModelViewSet):
-    queryset = Categories.objects.all()
-    serializer_class = CategoriesSerializer
-    authentication_classes = [TokenAuthentication]
+# Point to note down 
+#beow for GET
+# http://127.0.0.1:8000/viewset/categories/ 'Authorization: Token 870f90d048a3c51b244ec7b706a3c94153a7b722 with use of abbove line interminal we can see data in terminal
+
+# below for POST
+# http -f POST http://127.0.0.1:8000/viewset/categories/ title='mongo' 'Authorization: Token 870f90d048a3c51b244ec7b706a3c94153a7b722 with use of abbove line interminal we can see data in terminal
+
+#below for PUT
+# http PUT http://127.0.0.1:8000/viewset/categories/4 title='Apphanso' 'Authorization: Token 870f90d048a3c51b244ec7b706a3c94153a7b722 with use of abbove line interminal we can see data in terminal
+
+
+# class CategoriesViewSet(viewsets.ModelViewSet):
+#     queryset = Categories.objects.all()
+#     serializer_class = CategoriesSerializer
+#     authentication_classes = [TokenAuthentication]
+#     permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticatedOrReadOnly]  # Agar register user hai to post update and delete kar payega and anony mous user hai toh sirif api get kar sakta hai
+
+
+########## Implementing Custom Authentication #########################
+# by using username we can use api
+# http://127.0.0.1:8000/viewset/categories/?username=admin
+# http://127.0.0.1:8000/viewset/categories/1/?username=admin
+
+# class CategoriesViewSet(viewsets.ModelViewSet):
+#     queryset = Categories.objects.all()
+#     serializer_class = CategoriesSerializer
+#     authentication_classes = [CustomAuthentication]
+#     permission_classes = [IsAuthenticated]
+
+
+
+######### Implementation of Json Web Token (JWT) #############
+
+
+class ProductList(ListAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+
+
+# Creat APi View
+class ProductCreate(CreateAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated] 
+
+# Retrieve API View # use to fetch individual or single data using id 
+class ProductRetrieve(RetrieveAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer 
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]  
+
+# Update API view
+class ProductUpdate(UpdateAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer 
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated] 
+
+# Delete API View
+class ProductDelete(DestroyAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
