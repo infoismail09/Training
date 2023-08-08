@@ -7,7 +7,7 @@ from django.http import HttpResponse
 #     def my_function(request):
 #         print("This is Before View")
 #         response = get_response(request)
-#         print("This is after view")
+#         print("This is after view") 
 #         return response
 #     return my_function
 
@@ -59,18 +59,18 @@ from django.http import HttpResponse
  #### Middleware Hooks are special methods for classed based middlware only: ####
 
 
-class MyProcessMiddleware:
-    def __init__(self,get_response):
-        self.get_response = get_response
+# class MyProcessMiddleware:
+#     def __init__(self,get_response):
+#         self.get_response = get_response
 
-    def __call__(self, request):
-        response = self.get_response(request)
-        return response
+#     def __call__(self, request):
+#         response = self.get_response(request)
+#         return response
     
-    def process_view(request,*args, **kwargs):
-        print("This is process view - Before view")
-        # return HttpResponse("This is before View") 
-        return None # iss case me abhi view chalega 
+#     def process_view(request,*args, **kwargs):
+#         print("This is process view - Before view")
+#         # return HttpResponse("This is before View") 
+#         return None # iss case me abhi view chalega 
 
 
 

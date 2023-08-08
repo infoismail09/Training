@@ -5,12 +5,14 @@ from django.http import JsonResponse
 from django.http import HttpResponse
 from django.http import Http404
 from rest_framework.views import APIView
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework import viewsets
 from rest_framework.generics import ListAPIView,RetrieveAPIView,CreateAPIView,UpdateAPIView,DestroyAPIView
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateAPIView,RetrieveDestroyAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework.response import Response
-from api.models import Quotes,Categories,Products
-from api.serializers import QuotesSerializer,CategoriesSerializer,ProductSerializer
+from api.models import Quotes,Categories,Products,FAQs
+from api.serializers import QuotesSerializer,CategoriesSerializer,ProductSerializer,FaqsSerializer
 from drf_spectacular.utils import extend_schema
 from .mypaginations import MyPageNumberPagination
 # from .mypaginations import MyCursorPagination
@@ -24,10 +26,10 @@ from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated,AllowAny,IsAdminUser,IsAuthenticatedOrReadOnly,DjangoModelPermissions,DjangoModelPermissionsOrAnonReadOnly
 # below i mport is for Session Autentication
 from rest_framework.authentication import SessionAuthentication
-# belo custom permission import
+# below custom permission import
 from .custompermissions import MyPermission
 # below token Autentication imported
-# from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import TokenAuthentication
 from api.customauth import CustomAuthentication
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
@@ -247,9 +249,9 @@ class ProductList(ListAPIView):
 
 # for listing All product list  Using Generics Concrete Api View
 
-# class ProductList(ListAPIView):   
-#     queryset = Products.objects.all()
-#     serializer_class = ProductSerializer
+class ProductList(ListAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer
 #     # pagination_class = MyPageNumberPagination    # numberpagination   
 #     # pagination_class = MyCursorPagination           # Cursor Pagination
 #     pagination_class = MyLimitOffsetPagination
@@ -273,8 +275,10 @@ class ProductUpdate(UpdateAPIView):
 class ProductDelete(DestroyAPIView):   
     queryset = Products.objects.all()
     serializer_class = ProductSerializer
+    
 
 # now implementing generics concrete API view combination 
+
 #listing and creating data 
 class ProductListCreate(ListCreateAPIView):   
     queryset = Products.objects.all()
@@ -330,9 +334,10 @@ class ProductRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
 
 # class CategoriesViewSet(viewsets.ModelViewSet):
 #     queryset = Categories.objects.all()
+
 #     serializer_class = CategoriesSerializer
 #     authentication_classes = [SessionAuthentication]
-    # permission_classes = [IsAuthenticated] # isme check karega wo login hai ya nahi nahi hai toh login karna padhega
+#     permission_classes = [IsAuthenticated] # isme check karega wo login hai ya nahi nahi hai toh login karna padhega
     # permission_classes = [IsAdminUser]   # isme jiska staff status tick rahega wo access kar payega
     # permission_classes = [AllowAny]    # if we dont want to authenticate particular view simple implement AllowAny and import also 
     # permission_classes = [IsAuthenticatedOrReadOnly]  # Agar register user hai to post update and delete kar payega and anony mous user hai toh sirif api get kar sakta hai
@@ -430,6 +435,8 @@ class ProductRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
 
 
 ########## Implementing Custom Authentication #########################
+
+
 # by using username we can use api
 # http://127.0.0.1:8000/viewset/categories/?username=admin
 # http://127.0.0.1:8000/viewset/categories/1/?username=admin
@@ -445,38 +452,56 @@ class ProductRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
 ######### Implementation of Json Web Token (JWT) #############
 
 
-class ProductList(ListAPIView):   
-    queryset = Products.objects.all()
-    serializer_class = ProductSerializer
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+# class ProductList(ListAPIView):   
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer
+#     authentication_classes = [JWTAuthentication]
+#     permission_classes = [IsAuthenticated]
 
 
-# Creat APi View
-class ProductCreate(CreateAPIView):   
-    queryset = Products.objects.all()
-    serializer_class = ProductSerializer
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated] 
+# # Creat APi View
+# class ProductCreate(CreateAPIView):   
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer
+#     authentication_classes = [JWTAuthentication]
+#     permission_classes = [IsAuthenticated] 
 
-# Retrieve API View # use to fetch individual or single data using id 
-class ProductRetrieve(RetrieveAPIView):   
-    queryset = Products.objects.all()
-    serializer_class = ProductSerializer 
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]  
+# # Retrieve API View # use to fetch individual or single data using id 
+# class ProductRetrieve(RetrieveAPIView):   
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer 
+#     authentication_classes = [JWTAuthentication]
+#     permission_classes = [IsAuthenticated]  
 
-# Update API view
-class ProductUpdate(UpdateAPIView):   
-    queryset = Products.objects.all()
-    serializer_class = ProductSerializer 
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated] 
+# # Update API view
+# class ProductUpdate(UpdateAPIView):   
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer 
+#     authentication_classes = [JWTAuthentication]
+#     permission_classes = [IsAuthenticated] 
 
-# Delete API View
-class ProductDelete(DestroyAPIView):   
-    queryset = Products.objects.all()
-    serializer_class = ProductSerializer
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+# # Delete API View
+# class ProductDelete(DestroyAPIView):   
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer
+#     authentication_classes = [JWTAuthentication]
+#     permission_classes = [IsAuthenticated]
+
+
+########### Implementing FAQS View for File upload and for casching ################
+
+class FaqsListCreate(ListCreateAPIView):
+    queryset = FAQs.objects.all()
+    serializer_class = FaqsSerializer
+    
+    @method_decorator(cache_page(1800)) # for 30 mintues cache
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+
+class RetrieveUpdateDestroyFaqs(RetrieveUpdateDestroyAPIView):
+    queryset = FAQs.objects.all()
+    serializer_class = FaqsSerializer
+
+
 

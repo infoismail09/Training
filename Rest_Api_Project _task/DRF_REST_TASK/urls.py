@@ -17,9 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from api import views
+from django.conf import settings
+from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
-from rest_framework.routers import DefaultRouter
-from rest_framework.authtoken.views import obtain_auth_token
+# from rest_framework.routers import DefaultRouter
+# below import for token authentication
+# from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView,TokenVerifyView
 # Creating Router Object
 # router = DefaultRouter()
@@ -35,12 +38,16 @@ urlpatterns = [
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     # for session Authentication endpoint for browser login logout
-    path('auth/',include('rest_framework.urls',namespace='rest_framework')),
-    # path('gettoken/',obtain_auth_token),
+    # path('auth/',include('rest_framework.urls',namespace='rest_framework')),
+    # for Token Authentication Endpoint to generate token
+    # path('gettoken/',obtain_auth_token)
     # enpoint for simple jwt
-    path('gettoken/',TokenObtainPairView.as_view(),name='token_obtain_pair'),
-    path('refreshtoken/',TokenRefreshView.as_view(),name='token_refresh'),
-    path('verifytoken/',TokenVerifyView.as_view(),name='token_verify'),
+    # path('gettoken/',TokenObtainPairView.as_view(),name='token_obtain_pair'),
+    # path('refreshtoken/',TokenRefreshView.as_view(),name='token_refresh'),
+    # path('verifytoken/',TokenVerifyView.as_view(),name='token_verify'),
 
+] 
 
-]
+if settings.DEBUG:
+    # urlpatterns += static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

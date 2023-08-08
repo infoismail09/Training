@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Quotes,Categories,Products
+from .models import Quotes,Categories,Products,FAQs
 
 class QuotesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,5 +23,11 @@ class ProductSerializer(serializers.ModelSerializer):
         read_only_fields =  ['created_at' , 'updated_at','product'] # included what to show in the nested serializer in the fields 
         depth = 1
 
+   
+
+class FaqsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FAQs
+        fields = ['id','questions','answer','attachment']
 
 

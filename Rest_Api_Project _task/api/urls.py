@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+# from django.views.decorators.cache import cache_page
+
 
 urlpatterns = [
     path('quotes/',views.quotes_list, name = 'quotes'),
@@ -21,7 +23,11 @@ urlpatterns = [
     # now for task creating endpoint for categoy list and product list
     path('categorygetapi/',views.Category_list.as_view()),
     path('productgetapi/',views.Category_list.as_view()),
-
+    path('faqslistcreate/',views.FaqsListCreate.as_view(),name='FaqsListCreate'),
+    path('faqsRetrieveUpdateDestroy/<int:pk>/',views.RetrieveUpdateDestroyFaqs.as_view(),name='RetriveUpdateDestroy'),
+    # for cache example for perview cache
+    # path('faqsRetrieveUpdateDestroy/<int:pk>/',cache_page(1800)(views.RetrieveUpdateDestroyFaqs.as_view()),name='RetriveUpdateDestroy'),
+    
 ]   
 
 

@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import FileExtensionValidator
 # from django.conf import settings
 # from django.db.models.signals import post_save
 # from django.dispatch import receiver
@@ -36,3 +37,21 @@ class Products(models.Model):
 # def create_auth_token(sender,instance=None,created=False,**kwargs):
 #     if created:
 #         Token.objects.create(user=instance)
+
+class Request_Log(models.Model):
+    user_id = models.IntegerField(null=True)
+    request_method = models.CharField(max_length=10)
+    request_path = models.CharField(max_length=500)
+    response_status = models.IntegerField()
+    request_body=models.JSONField(null=True)
+    remote_address = models.CharField(max_length=100)
+    server_hostname = models.CharField(max_length=200)
+    run_time = models.DecimalField(max_digits=23, decimal_places=20)
+    timestamp = models.DateTimeField(auto_now=True)
+
+
+class FAQs(models.Model):
+    questions = models.CharField(max_length=255)
+    answer = models.TextField(max_length=255)
+    attachment = models.FileField(blank=True,validators=[FileExtensionValidator(allowed_extensions=["pdf"])]
+)
