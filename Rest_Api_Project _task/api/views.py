@@ -36,7 +36,6 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 @extend_schema(request=QuotesSerializer,responses=QuotesSerializer)
 @api_view(['GET','POST'])
-
 def quotes_list(request):
 
     '''
@@ -74,7 +73,6 @@ def quotes_list(request):
 
 # @extend_schema(request=QuotesSerializer,responses=QuotesSerializer)
 # @api_view(['GET','PUT','PATCH','DELETE'])
-
 # def quotes_details(request,pk):
 # # GET Functionality
 #     if request.method == 'GET':
@@ -210,16 +208,16 @@ class Categories_details(APIView):
 
 ############### Implementing serch filter functionality 
 
-# class Category_list(ListAPIView):
-#     queryset = Categories.objects.all()
-#     serializer_class = CategoriesSerializer
-#     # filter_backends = [SearchFilter]
-#     # search_fields = ['title']
-#     # filterset_fields  = ['title','created at'] # example for multiple feilds
-#     search_fields = ['^title'] 
-    # search_fields = ['=title']  # Exact Serch
-    # search_fields = ['@title']  # full search
-    # search_fields = ['$title']  # regex serch
+class Category_list(ListAPIView):
+    queryset = Categories.objects.all()
+    serializer_class = CategoriesSerializer
+    filter_backends = [SearchFilter]
+    search_fields = ['title']
+    filterset_fields  = ['title','created at'] # example for multiple feilds
+    search_fields = ['^title'] 
+    search_fields = ['=title']  # Exact Serch
+    search_fields = ['@title']  # full search
+    search_fields = ['$title']  # regex serch
 
 
 ############ Implementing Ordering Filter ########################
@@ -249,9 +247,9 @@ class ProductList(ListAPIView):
 
 # for listing All product list  Using Generics Concrete Api View
 
-class ProductList(ListAPIView):   
-    queryset = Products.objects.all()
-    serializer_class = ProductSerializer
+# class ProductList(ListAPIView):   
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer
 #     # pagination_class = MyPageNumberPagination    # numberpagination   
 #     # pagination_class = MyCursorPagination           # Cursor Pagination
 #     pagination_class = MyLimitOffsetPagination
