@@ -38,7 +38,7 @@ urlpatterns = [
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     # for session Authentication endpoint for browser login logout
-    # path('auth/',include('rest_framework.urls',namespace='rest_framework')),
+    path('auth/',include('rest_framework.urls',namespace='rest_framework')),
     # for Token Authentication Endpoint to generate token
     # path('gettoken/',obtain_auth_token)
     # enpoint for simple jwt

@@ -12,9 +12,9 @@ def send_mail_func(self):
     #timezone.localtime(users.date_time) + timedelta(days=2)
     for user in users:
         mail_subject = "Hi! Celery Testing"
-        message = "If you received mail, please Inform mr that i had sucess fully applied celery with django"
+        message = "If you are liking my content, please hit the like button and do subscribe to my channel"
         # to_email = user.email
-        to_email = ['ismailansar9988@gmail.com','ismailansari2292@gmail.com']
+        to_email = ['demoemail@fmail.com','demoemail@fmail.com']
         send_mail(
             subject = mail_subject,
             message=message,

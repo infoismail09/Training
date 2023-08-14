@@ -30,8 +30,13 @@ from rest_framework.authentication import SessionAuthentication
 from .custompermissions import MyPermission
 # below token Autentication imported
 from rest_framework.authentication import TokenAuthentication
-from api.customauth import CustomAuthentication
+# from api.customauth import CustomAuthentication
 from rest_framework_simplejwt.authentication import JWTAuthentication
+# importing for thortling 
+from rest_framework.throttling import AnonRateThrottle,UserRateThrottle
+from api.throttling import JackRateThrottle
+# for alag alag part of api appling throttle
+from rest_framework.throttling import ScopedRateThrottle
 
 
 @extend_schema(request=QuotesSerializer,responses=QuotesSerializer)
@@ -208,16 +213,16 @@ class Categories_details(APIView):
 
 ############### Implementing serch filter functionality 
 
-class Category_list(ListAPIView):
-    queryset = Categories.objects.all()
-    serializer_class = CategoriesSerializer
-    filter_backends = [SearchFilter]
-    search_fields = ['title']
-    filterset_fields  = ['title','created at'] # example for multiple feilds
-    search_fields = ['^title'] 
-    search_fields = ['=title']  # Exact Serch
-    search_fields = ['@title']  # full search
-    search_fields = ['$title']  # regex serch
+# class Category_list(ListAPIView):
+#     queryset = Categories.objects.all()
+#     serializer_class = CategoriesSerializer
+#     filter_backends = [SearchFilter]
+#     search_fields = ['title']
+#     filterset_fields  = ['title','created at'] # example for multiple feilds
+#     search_fields = ['^title'] 
+#     search_fields = ['=title']  # Exact Serch
+#     search_fields = ['@title']  # full search
+#     search_fields = ['$title']  # regex serch
 
 
 ############ Implementing Ordering Filter ########################
@@ -231,17 +236,17 @@ class Category_list(ListAPIView):
 
 ############### Implementing check list last task of search and filter that is for search for both product and category
 
-class Category_list(ListAPIView):
-    queryset = Categories.objects.all()
-    serializer_class = CategoriesSerializer
-    filter_backends = [SearchFilter]
-    search_fields = ['title']
+# class Category_list(ListAPIView):
+#     queryset = Categories.objects.all()
+#     serializer_class = CategoriesSerializer
+#     filter_backends = [SearchFilter]
+#     search_fields = ['title']
 
-class ProductList(ListAPIView):   
-    queryset = Products.objects.all()
-    serializer_class = ProductSerializer 
-    filter_backends = [SearchFilter]
-    search_fields = ['title']   
+# class ProductList(ListAPIView):   
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer 
+#     filter_backends = [SearchFilter]
+#     search_fields = ['title']   
 
 ################## Now implementing Generics API View ####################
 
@@ -254,25 +259,30 @@ class ProductList(ListAPIView):
 #     # pagination_class = MyCursorPagination           # Cursor Pagination
 #     pagination_class = MyLimitOffsetPagination
 
-# Creat APi View
-class ProductCreate(CreateAPIView):   
-    queryset = Products.objects.all()
-    serializer_class = ProductSerializer 
+# # list of all products
+# class ProductList(ListAPIView):   
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer
 
-# Retrieve API View # use to fetch individual or single data using id 
-class ProductRetrieve(RetrieveAPIView):   
-    queryset = Products.objects.all()
-    serializer_class = ProductSerializer   
+# # Creat APi View
+# class ProductCreate(CreateAPIView):   
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer 
 
-# Update API view
-class ProductUpdate(UpdateAPIView):   
-    queryset = Products.objects.all()
-    serializer_class = ProductSerializer  
+# # Retrieve API View # use to fetch individual or single data using id 
+# class ProductRetrieve(RetrieveAPIView):   
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer   
 
-# Delete API View
-class ProductDelete(DestroyAPIView):   
-    queryset = Products.objects.all()
-    serializer_class = ProductSerializer
+# # Update API view
+# class ProductUpdate(UpdateAPIView):   
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer  
+
+# # Delete API View
+# class ProductDelete(DestroyAPIView):   
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer
     
 
 # now implementing generics concrete API view combination 
@@ -500,6 +510,59 @@ class FaqsListCreate(ListCreateAPIView):
 class RetrieveUpdateDestroyFaqs(RetrieveUpdateDestroyAPIView):
     queryset = FAQs.objects.all()
     serializer_class = FaqsSerializer
+
+
+############## now implementing Thtottling concept ##################
+
+
+# # list of all products
+# class ProductList(ListAPIView):   
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer
+#     authentication_classes = [SessionAuthentication]
+#     # permission_classes = [IsAuthenticated]
+#     permission_classes = [IsAuthenticatedOrReadOnly]
+#     # throttle_classes = [AnonRateThrottle,UserRateThrottle]
+#     # throttle_classes = [AnonRateThrottle,JackRateThrottle] # customize throttle 
+
+#  thorttling diffrent concept for api ke alag alag part ko hum trottle kar sakte hai
+
+# list of all products
+class ProductList(ListAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'viewpro'
+
+# Creat APi View
+class ProductCreate(CreateAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer 
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'modipro'
+
+# Retrieve API View # use to fetch individual or single data using id 
+class ProductRetrieve(RetrieveAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer
+    throttle_classes = [ScopedRateThrottle]   # isko hum globally bhi kar sakte hai settings me 
+    throttle_scope = 'viewpro'   #random string
+    
+
+# Update API view
+class ProductUpdate(UpdateAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer 
+    throttle_classes = [ScopedRateThrottle] 
+    throttle_scope = 'modipro'
+
+# Delete API View
+class ProductDelete(DestroyAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = 'modipro'
+    
 
 
 

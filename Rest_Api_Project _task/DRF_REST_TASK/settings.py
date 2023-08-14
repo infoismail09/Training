@@ -163,6 +163,15 @@ REST_FRAMEWORK = {
     # 'SEARCH_PARAM': 'q'   #  this use to replace the word serch in end point
     # 'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.PageNumberPagination',
     # 'PAGE_SIZE':5
+    # 'DEFAULT_THROTTLE_RATES': {
+    #     'anon': '2/day',
+    #     'user': '5/hour',
+    #     'jack': '3/minute'  # customize throtling class 
+    # },
+    'DEFAULT_THROTTLE_RATES': {
+        'viewpro':'5/hour',
+        'modipro':'2/day'
+    },
     
 }
 
@@ -201,7 +210,13 @@ REST_FRAMEWORK = {
 # }
 
 
+#### just good to now information if we want to only get data only in raw json format or we can desable browseble api
 
+#simply add this 
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_RENDERER_CLASSES':('rest_framework.renderers.JSONRenderer',)
+# }
 
 
 

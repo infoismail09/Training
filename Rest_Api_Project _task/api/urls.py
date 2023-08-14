@@ -21,8 +21,8 @@ urlpatterns = [
     path('Products/Delete/<int:pk>/',views.ProductRetriveDestroy.as_view(),name='Delete_Products'), # as per the below naming convention taken api end point
     path('Products/RetrieveUpdateDestroy/<int:pk>/',views.ProductRetrieveUpdateDestroy.as_view(),name='RetrieveUpdateDestroy'),
     # now for task creating endpoint for categoy list and product list
-    path('categorygetapi/',views.Category_list.as_view()),
-    path('productgetapi/',views.Category_list.as_view()),
+    # path('categorygetapi/',views.Category_list.as_view()),
+    # path('productgetapi/',views.Category_list.as_view()),
     path('faqslistcreate/',views.FaqsListCreate.as_view(),name='FaqsListCreate'),
     path('faqsRetrieveUpdateDestroy/<int:pk>/',views.RetrieveUpdateDestroyFaqs.as_view(),name='RetriveUpdateDestroy'),
     # for cache example for perview cache
