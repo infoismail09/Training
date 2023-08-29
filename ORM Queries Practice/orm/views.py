@@ -13,17 +13,12 @@ def get_album(request):
     # details=Album.objects.exclude(genre="Action,Drama")
     # details=Album.objects.exclude(artist="hritik")
     # details=Album.objects.exclude(artist="Ramcharan").exclude(genre="comedy")
-    # details=Album.objects.get(id=1)
-    # details.awards=10
-    # details=Album.objects.get(id=2)
-    # details.awards=25
-    # details=Album.objects.get(id=3)
-    # details.awards=15
-    # details=Album.objects.get(id=4)
-    # details.awards=40
-    # details.save()
+
+    # agrregate ORM
+
     # details=Album.objects.count()
     # details=Album.objects.annotate(Min("awards"))
+    # print(details)  # creates a seperate summury of queryset
     # details=Album.objects.annotate(Max("awards"))
     # print(vars(details[0]))
     # details=Album.objects.order_by("title") #ascending order
@@ -65,6 +60,7 @@ def get_album(request):
     # details=Album.objects.aggregate(Min("awards"))
     # details=Album.objects.aggregate(Avg("awards"))
     # details=Album.objects.aggregate(Sum("awards"))
+    # details=Album.objects.aggregate(Count("awards"))
     # details=Album.objects.filter(genre__exact="action")
     # details = Album.objects.annotate(num_books=Count('genre'))
     # details=Album.objects.filter(genre__iexact="Action")
@@ -81,6 +77,45 @@ def get_album(request):
     # Album(title="shershah",artist="Sidhdharth",genre="Biography",awards=14),
     # Album(title="URI",artist="Vicky Kaushal",genre="biography",awards=20)]
     # details=Album.objects.bulk_create(data)
+
+     # to retrive data
+
+    # details=Album.objects.get(id=1)
+    # details=Album.objects.get(id=2)
+    # details=Album.objects.get(id=3)
+    # details=Album.objects.get(id=11)
+    # print(details)
+
+    # ## create 
+    # details = Album(title="Marvel Avengers",artist="iron man",genre="Action",awards="12")
+    # details.save()
+    # print(details)
+
+    # ##  update
+    # details = Album.objects.get(id=2)
+    # details.genre="pop"
+    # details.save()
+    # print(details)
+
+    # details = Album.objects.get(id=12)
+    # details.genre="Romace"
+    # details.artist="Sharuk Khan"
+    # details.title="Glass"
+    # details.save()
+    # print(details)
+
+    ## delete 
+    # details = Album.objects.get(id=4)
+    # details.delete()
+    # print(details)
+
+    ## to delete multiple objects
+
+    # details= Album.objects.filter(genre="pop").delete()
+    # print(details)
+
+######### Bulk Create functionality ############
+
 
     # data = [
     #     {
@@ -111,22 +146,28 @@ def get_album(request):
     # Album.objects.bulk_create(list_of_objects)
 
 
-    data = [
-        {"name": "honey sing", "album": "yo yo honey singh"},
-        {"name": "Meka", "album": "tara raha "},
-    ]
-    album_instance=Album.objects.get(id=9)
-
-    list_of_objects = []
-
-    for i in data:
-        list_of_objects.append(Song(name=i["name"], album=album_instance))
-
-        Song.objects.bulk_create (list_of_objects)
 
     # print(details)
     # print()
     # print(details.query)
+
+    ### bulk update 
+
+    # new_title = "Shazam comics"
+    # new_artist = "Batman"
+    # new_genre = "Action"
+    # new_awards = "Silver"
+
+    # instances_to_update = Album.objects.filter(id__in=[11,12,13])
+    
+
+    # for instance in instances_to_update:
+    #     instance.title = new_title
+    #     instance.artist = new_artist
+    #     instance.genre = new_genre
+    #     instance.awards = new_awards
+
+    # Album.objects.bulk_update(instances_to_update,fields=['title','artist','genre','awards'])
 
     return HttpResponse(
         "<h1>Welcome to My Object Relational Mapping <br>Album</br></h1>"
@@ -134,10 +175,11 @@ def get_album(request):
 
 
 def get_song(request):
-    song_data = Song.objects.all()
-    song_data = Song.objects.count()
-    details = Song.objects.select_related("album").all()
-    print(details)
+    # song_data = Song.objects.all()
+    # song_data = Song.objects.count()
+    # print(song_data)
+    # details = Song.objects.select_related("album").all()
+    # print(details)
     return HttpResponse(
         "<h1>Welcome to My Object Relational Mapping <br>Song</br></h1>"
     )

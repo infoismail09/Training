@@ -259,30 +259,34 @@ class Categories_details(APIView):
 #     # pagination_class = MyCursorPagination           # Cursor Pagination
 #     pagination_class = MyLimitOffsetPagination
 
+
+############# implemented normal genric class based view
+
+
 # # list of all products
-# class ProductList(ListAPIView):   
-#     queryset = Products.objects.all()
-#     serializer_class = ProductSerializer
+class ProductList(ListAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer
 
 # # Creat APi View
-# class ProductCreate(CreateAPIView):   
-#     queryset = Products.objects.all()
-#     serializer_class = ProductSerializer 
+class ProductCreate(CreateAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer 
 
 # # Retrieve API View # use to fetch individual or single data using id 
-# class ProductRetrieve(RetrieveAPIView):   
-#     queryset = Products.objects.all()
-#     serializer_class = ProductSerializer   
+class ProductRetrieve(RetrieveAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer   
 
 # # Update API view
-# class ProductUpdate(UpdateAPIView):   
-#     queryset = Products.objects.all()
-#     serializer_class = ProductSerializer  
+class ProductUpdate(UpdateAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer  
 
 # # Delete API View
-# class ProductDelete(DestroyAPIView):   
-#     queryset = Products.objects.all()
-#     serializer_class = ProductSerializer
+class ProductDelete(DestroyAPIView):   
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer
     
 
 # now implementing generics concrete API view combination 
@@ -340,12 +344,11 @@ class ProductRetrieveUpdateDestroy(RetrieveUpdateDestroyAPIView):
 
 ############### Implementing session Authentication ##############
 
-# class CategoriesViewSet(viewsets.ModelViewSet):
-#     queryset = Categories.objects.all()
-
-#     serializer_class = CategoriesSerializer
-#     authentication_classes = [SessionAuthentication]
-#     permission_classes = [IsAuthenticated] # isme check karega wo login hai ya nahi nahi hai toh login karna padhega
+class CategoriesViewSet(viewsets.ModelViewSet):
+    queryset = Categories.objects.all()
+    serializer_class = CategoriesSerializer
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated] # isme check karega wo login hai ya nahi nahi hai toh login karna padhega
     # permission_classes = [IsAdminUser]   # isme jiska staff status tick rahega wo access kar payega
     # permission_classes = [AllowAny]    # if we dont want to authenticate particular view simple implement AllowAny and import also 
     # permission_classes = [IsAuthenticatedOrReadOnly]  # Agar register user hai to post update and delete kar payega and anony mous user hai toh sirif api get kar sakta hai
@@ -520,48 +523,48 @@ class RetrieveUpdateDestroyFaqs(RetrieveUpdateDestroyAPIView):
 #     queryset = Products.objects.all()
 #     serializer_class = ProductSerializer
 #     authentication_classes = [SessionAuthentication]
-#     # permission_classes = [IsAuthenticated]
-#     permission_classes = [IsAuthenticatedOrReadOnly]
+#     permission_classes = [IsAuthenticated]
+#     # permission_classes = [IsAuthenticatedOrReadOnly]
 #     # throttle_classes = [AnonRateThrottle,UserRateThrottle]
 #     # throttle_classes = [AnonRateThrottle,JackRateThrottle] # customize throttle 
 
 #  thorttling diffrent concept for api ke alag alag part ko hum trottle kar sakte hai
 
-# list of all products
-class ProductList(ListAPIView):   
-    queryset = Products.objects.all()
-    serializer_class = ProductSerializer
-    throttle_classes = [ScopedRateThrottle]
-    throttle_scope = 'viewpro'
+# # list of all products
+# class ProductList(ListAPIView):   
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer
+#     throttle_classes = [ScopedRateThrottle]
+#     throttle_scope = 'viewpro'
 
-# Creat APi View
-class ProductCreate(CreateAPIView):   
-    queryset = Products.objects.all()
-    serializer_class = ProductSerializer 
-    throttle_classes = [ScopedRateThrottle]
-    throttle_scope = 'modipro'
+# # Creat APi View
+# class ProductCreate(CreateAPIView):   
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer 
+#     throttle_classes = [ScopedRateThrottle]
+#     throttle_scope = 'modipro'
 
-# Retrieve API View # use to fetch individual or single data using id 
-class ProductRetrieve(RetrieveAPIView):   
-    queryset = Products.objects.all()
-    serializer_class = ProductSerializer
-    throttle_classes = [ScopedRateThrottle]   # isko hum globally bhi kar sakte hai settings me 
-    throttle_scope = 'viewpro'   #random string
+# # Retrieve API View # use to fetch individual or single data using id 
+# class ProductRetrieve(RetrieveAPIView):   
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer
+#     throttle_classes = [ScopedRateThrottle]   # isko hum globally bhi kar sakte hai settings me 
+#     throttle_scope = 'viewpro'   #random string
     
 
-# Update API view
-class ProductUpdate(UpdateAPIView):   
-    queryset = Products.objects.all()
-    serializer_class = ProductSerializer 
-    throttle_classes = [ScopedRateThrottle] 
-    throttle_scope = 'modipro'
+# # Update API view
+# class ProductUpdate(UpdateAPIView):   
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer 
+#     throttle_classes = [ScopedRateThrottle] 
+#     throttle_scope = 'modipro'
 
-# Delete API View
-class ProductDelete(DestroyAPIView):   
-    queryset = Products.objects.all()
-    serializer_class = ProductSerializer
-    throttle_classes = [ScopedRateThrottle]
-    throttle_scope = 'modipro'
+# # Delete API View
+# class ProductDelete(DestroyAPIView):   
+#     queryset = Products.objects.all()
+#     serializer_class = ProductSerializer
+#     throttle_classes = [ScopedRateThrottle]
+#     throttle_scope = 'modipro'
     
 
 
