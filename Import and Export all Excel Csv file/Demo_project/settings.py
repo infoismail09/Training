@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'legend',
     'import_export',
+    'blog',
+    'uploder',
 ]
 
 MIDDLEWARE = [
