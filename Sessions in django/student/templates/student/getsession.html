@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Get Session</title>
+  </head>
+  <body>
+    <h1>Get Session Data</h1>
+    {% comment %} {{ name }}<br><hr>
+    <!-- {{lname}} -->
+    {% for key in keys %}
+      {{keys}} <br>
+    {% endfor %} <hr>
+
+    {% for item in items %}
+      {{items}} <br>
+    {% endfor %}<hr> {% endcomment %}
+
+    {{name}}<br>
+    {{request.session.get_session_cookie_age}}<br>
+    {{request.session.get_expiry_age}}<br>
+    {{request.session.get_expiry_date}}<br>
+    {{request.session.get_expire_at_browser_close}}<br>
+  </body>
+</html>
