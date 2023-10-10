@@ -8,7 +8,7 @@ from django.db.models import Count, Min, Max, Sum, Avg
 
 def get_album(request):
     # details=Album.objects.all()
-    # details=Album.objects.get(pk=1)
+    # details=Album.objects.get(id=1) terminal pe milega but varialbe nahi lena and get se query nahi milegi
     # details=Album.objects.filter(genre="Action")
     # details=Album.objects.exclude(genre="Action,Drama")
     # details=Album.objects.exclude(artist="hritik")
@@ -20,34 +20,63 @@ def get_album(request):
     # details=Album.objects.annotate(Min("awards"))
     # print(details)  # creates a seperate summury of queryset
     # details=Album.objects.annotate(Max("awards"))
-    # print(vars(details[0]))
     # details=Album.objects.order_by("title") #ascending order
     # details=Album.objects.order_by("-title") #DESCENDING 0RDER
     # details=Album.objects.order_by("?") #random order
     # details=Album.objects.exclude(genre='action')  # Dont include this genre
     # details=Album.objects.get(id=2)
     # details.save()
-    # details=Album.objects.get(id=3)
+
+    # modify the existing query
+    # details=Album.objects.get(id=11)
     # details.genre="Biography"
     # details.save()
+    # print(details)
+
     # details=Album.objects.order_by("id").reverse()[:3]
     # details=Album.objects.values()
+    # print(details)
+
     # details=Album.objects.values('title','awards')
-    # details=Album.objects.values_list("", flat=True)
-    # details=Album.objects.distinct("title")
+    # details=Album.objects.values_list("awards", flat=True)
+    # print(details)
+
+    # details=Album.objects.distinct()
+    # print(details.query)
+
     # details=Album.objects.exists()
+    # print(details)
+
     # details=Album.objects.first()
     # details=Album.objects.last()
     # details=Album.objects.latest("awards")
     # details=Album.objects.earliest("title")
-    # details=Album.objects.create(title="gadar",artist="sunny deol",genre="action",awards=23)
-    # data=[Album(title="Kabir Singh",artist="Sahid Kapoor",genre="Romantic",awards=7),
-    # Album(title="shershah",artist="Sidhdharth",genre="Biography",awards=14),
-    # Album(title="URI",artist="Vicky Kaushal",genre="biography",awards=20)]
+
+    # create orm query
+    # details = Album(title="mission majnu",artist="shidhart Malhotra",genre='action',awards=67)
+    # details.save()
+    # print(details) # .query method is not allowed 
+
+    # bulk create orm query
+    # data=[Album(title="baban Singh",artist="anil Kapoor",genre="Drama",awards=9),
+    # Album(title="mission rangigang",artist="akshay kumar",genre="biography",awards=16),
+    # Album(title="deth squad",artist="john cena",genre="funny movie",awards=20)]
     # details=Album.objects.bulk_create(data)
+    # print(details)
+
     # details=Album.objects.get_or_create(title="krissh",artist="hritik",genre="action",awards=15)
-    # details=Album.objects.get_or_create(title="1983",artist="Ranveer Singh",genre="Sports",awards=16)
-    # details=Album.objects.filter(id=3).update(genre="action")
+    # print(details)
+
+    # get or create functionality
+
+    # try:
+    #     details = Album.objects.get(title='Leo Tolstoy',artist="leonardo",genre="comedy",awards=8)
+    # except:
+    #     Album.objects.exists()
+    #     details = Album(title='Leo Tolstoy',artist="leonardo",genre="comedy",awards=8)
+    #     details.save()
+    # print(details)
+
     # details,created=Album.objects.update_or_create(id=14,title="war",defaults={'title':'krissh'})
     # details=Album.objects.all()
     # for album in details:
@@ -80,7 +109,7 @@ def get_album(request):
 
      # to retrive data
 
-    # details=Album.objects.get(id=1)
+    # details=Album.objects.get(id=1)   # dont use .query bcz single object show karne me capeble hai 
     # details=Album.objects.get(id=2)
     # details=Album.objects.get(id=3)
     # details=Album.objects.get(id=11)
@@ -107,7 +136,7 @@ def get_album(request):
     ## delete 
     # details = Album.objects.get(id=4)
     # details.delete()
-    # print(details)
+    # print(details.query)
 
     ## to delete multiple objects
 
@@ -168,6 +197,13 @@ def get_album(request):
     #     instance.awards = new_awards
 
     # Album.objects.bulk_update(instances_to_update,fields=['title','artist','genre','awards'])
+
+
+    # details=Album.objects.get(id=12)
+    # print(details)
+    # # print(details.query)
+
+    
 
     return HttpResponse(
         "<h1>Welcome to My Object Relational Mapping <br>Album</br></h1>"

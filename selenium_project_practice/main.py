@@ -29,9 +29,16 @@ print('You are logged in!')
 time.sleep(4)
 
 search_field = driver.find_element_by_id('twotabsearchtextbox')
-search_field.send_keys('Spiderman Statue')
+search_field.send_keys('realme phone')
 search_loop = driver.find_element_by_class_name('nav-right')
 search_loop.click()
 print('The search was made succesfully!')
+
+# Sear by class name and find price 
+try:
+    price = driver.find_element_by_class_name('a-price-whole').text
+    print(f"The price of Realme C3 phone is {price}")
+except:
+    print("The product was not found on Amazon")
 
 driver.quit()
