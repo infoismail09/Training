@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Album, Song
 from django.db.models import Count, Min, Max, Sum, Avg
+from django.db.models import Q
 
 # Create your views here.
 
@@ -16,7 +17,7 @@ def get_album(request):
 
     # agrregate ORM
 
-    # details=Album.objects.count()
+    # details=Album.objects.count() # no .query
     # details=Album.objects.annotate(Min("awards"))
     # print(details)  # creates a seperate summury of queryset
     # details=Album.objects.annotate(Max("awards"))
@@ -24,8 +25,6 @@ def get_album(request):
     # details=Album.objects.order_by("-title") #DESCENDING 0RDER
     # details=Album.objects.order_by("?") #random order
     # details=Album.objects.exclude(genre='action')  # Dont include this genre
-    # details=Album.objects.get(id=2)
-    # details.save()
 
     # modify the existing query
     # details=Album.objects.get(id=11)
@@ -95,12 +94,42 @@ def get_album(request):
     # details=Album.objects.filter(genre__iexact="Action")
     # details=Album.objects.filter(awards__lt=20)
     # details=Album.objects.filter(awards__gte=20)
+    # details = Album.objects.filter(awards__gt=20).values()   # it vill give you dictnary key way of fields
     # details=Album.objects.filter(artist__contains="hritik")
     # details=Album.objects.filter(artist__startswith="R")
     # details=Album.objects.filter(title__startswith=1)
     # details=Album.objects.filter(artist__endswith="r")
     # details = Album.objects.defer('title')
     # details = Album.objects.only('genre')
+
+    # And operater orm
+
+    # details = Album.objects.filter(genre="action") & Album.objects.filter(artist="Rohit shetty")
+    # print(details)
+
+    # details = Album.objects.filter(genre="action").filter(artist="Rohit shetty")
+    # print(details)
+
+
+    # OR (|)
+
+    # details = Album.objects.filter(genre="action") | Album.objects.filter(artist="Rohit shetty")
+    # print(details)
+
+    # details = Album.objects.filter(Q(genre="action")|Q(artist="Rohit shetty"))
+    # print(details)
+
+
+    # XOR (^)
+
+    # details = Album.objects.filter(genre="action") ^ Album.objects.filter(artist="Rohit shetty")
+    # print(details)
+
+    # details = Album.objects.filter(Q(genre="action") ^ Q(artist="Rohit shetty"))
+    # print(details)
+
+
+    # bul_ create nomal way
 
     # data=[Album(title="Kabir Singh",artist="Sahid Kapoor",genre="Romantic",awards=7),
     # Album(title="shershah",artist="Sidhdharth",genre="Biography",awards=14),
@@ -173,9 +202,6 @@ def get_album(request):
     #     )
 
     # Album.objects.bulk_create(list_of_objects)
-
-
-
     # print(details)
     # print()
     # print(details.query)
@@ -198,12 +224,6 @@ def get_album(request):
 
     # Album.objects.bulk_update(instances_to_update,fields=['title','artist','genre','awards'])
 
-
-    # details=Album.objects.get(id=12)
-    # print(details)
-    # # print(details.query)
-
-    
 
     return HttpResponse(
         "<h1>Welcome to My Object Relational Mapping <br>Album</br></h1>"

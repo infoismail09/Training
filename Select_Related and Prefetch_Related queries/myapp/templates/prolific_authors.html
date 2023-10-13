@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prolific Authors</title>
+</head>
+<body>
+    <h1>Prolific Authors</h1>
+    <ul>
+        {% for author in prolific_authors %}
+            <li>{{ author.name }} wrote {{ author.book_count }} books:
+                <ul>
+                    {% for book in author.book_set.all %}
+                        <li>{{ book.title }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
