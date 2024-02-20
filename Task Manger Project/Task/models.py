@@ -16,7 +16,7 @@ class Task(models.Model):
     created_at=models.DateTimeField(auto_now=True)
     updated_at=models.DateTimeField(auto_now=True)
 
-# This is python magic Method to refect task_name or what ever we put
+
     def __str__(self):
         return self.task_name
 
